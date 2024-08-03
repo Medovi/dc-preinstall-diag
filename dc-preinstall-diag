@@ -162,3 +162,26 @@ _command(){
     echo
     return $retval
 }
+
+run(){
+    local retval=126
+    local func="$1"
+    local msg
+    msg=$(printf "| %s |" "$func")
+
+    __header | __log
+
+    __check_title "$msg" | __log
+    __delimiter | __log
+    __newline | __log
+
+    $func 2>&1 | __log && retval=0 || retval=$?
+
+    __delimiter | __log
+
+    __short_msg $retval "$2" | __log_force_print
+
+    __footer | __log
+    __newline | __log
+    return $retval
+}
