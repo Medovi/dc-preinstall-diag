@@ -76,3 +76,12 @@ msg_done(){
     color_text "DONE" green
     echo "]"
 }
+
+__command_msg(){
+    local p='$'
+    if test "$1" = '-r'; then
+        shift
+        p='#'
+    fi
+    color_message "$p $*" bold
+}
