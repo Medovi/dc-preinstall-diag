@@ -209,8 +209,8 @@ check_active_services(){
 
     local service1="smb.service"
     local service2="nmb.service"
-    local service3="krb5kdc"
-    local service4="slapd"
+    local service3="krb5kdc.service"
+    local service4="slapd.service"
 
     _command systemctl status "$service1" 2> /dev/null | head -n 1
     echo "$(systemctl status "$service1" 2> /dev/null)" | grep "Active: active (running)" && retvals[0]=0 ||
@@ -250,6 +250,72 @@ check_active_services(){
 	    retval=0
 	fi
 	done
+
+    return $retval
+}
+
+check_samba_config(){
+    local retval=0
+    local file_config="/etc/samba/smb.conf"
+
+    command test -s "$file_config" | head -n 1
+    test -s "$file_config" && echo -e "Файл "$file_config" существует.\n" || { echo -e "Отсутствует файл "$file_config".\n" && retval=2; }
+
+    return $retval
+}
+
+check_hostname(){
+    local retval=0
+    local host="$(hostname -f)"
+
+    echo "Полное доменное имя хоста (FQDN):"
+    echo -e ""$host"\n"
+
+    { [[ "$host" == *.* ]] && [[ "$host" != $.* ]] && [[ "$(host "$host")" ]]; } || { echo "Некорректное доменное имя." && retval=2; }
+
+    return $retval
+}
+
+check_local_in_domain_name(){
+    local retval=0
+    local host="$(hostname -f)"
+    local suffix=".local"
+
+    echo "Полное доменное имя хоста (FQDN):"
+    echo -e ""$host"\n"
+
+    [[ "$host" != *"$suffix"* ]] && echo -e "Доменное имя не содержит суффикс "$suffix".\n" || { echo -e "Доменное имя содержит суффикс "$suffix".\n" && retval=2; }
+
+    return $retval
+}
+
+check_status_network_manager(){
+    # Тут важный момент: могут использоваться настройки, не связанные с Network Manager, тогда тест будет неактуален.
+    local retval=0
+    local service="NetworkManager.service"
+
+    _command systemctl status "$service" 2> /dev/null | head -n 1
+    echo "$(systemctl status "$service" 2> /dev/null)" | grep "Active: active (running)" && retval=0 ||
+    { echo "$(systemctl status "$service" 2> /dev/null)" | grep "Active: inactive (dead)" && retval=2; } ||
+    { echo "$(systemctl status "$service" 2> /dev/null)" | grep "Active: failed" && retval=1; } ||
+    { echo "Ошибка: возможно служба отсутствует." && retval=1; }
+    echo
+
+    return $retval
+}
+
+check_nameserver(){
+    local retval=0
+    local ip_addr="$(hostname -i)"
+    local nameservers="$(grep "nameserver " /etc/resolv.conf | awk '{print $2}')"
+
+    if echo "$nameservers" | grep -q "^$ip_addr$" || echo "$nameservers" | grep -q "127.0.0.1"; then
+	echo -e "В конфигурационном файле "/etc/resolv.conf" имеется строка nameserver 127.0.0.1 или с адресом текущего сетевого интерфейса:\n$(grep "nameserver" /etc/resolv.conf)"
+    else
+	echo "В конфигурационном файле "/etc/resolv.conf" нет строки "nameserver" <ip_адрес_текущей_машины>"
+	retval=2
+    fi
+	echo
 
     return $retval
 }
@@ -302,6 +368,11 @@ fi
 
 $runcmd check_task_samba_dc "Checking the availability of the "task-samba-dc" package"
 $runcmd check_active_services "Checking running services: smb, nmb, krb5kdc, slapd"
+$runcmd check_samba_config "Checking for the presence of the "/etc/samba/smb.conf" file"
+$runcmd check_hostname "Checking the full domain name of the host (FQDN)"
+$runcmd check_local_in_domain_name "Warning if there is a .local suffix in the name"
+$runcmd check_status_network_manager "Information about the active Network interface manager"
+$runcmd check_nameserver "Checking for nameserver 127.0.0.1 or <current_IP_address> in "/etc/resolv.conf""
 
 test -f "$logfile" && test -w "$logfile" && sed -i 's/\x1b\[[0-9;]*[mGKH]//g' $logfile
 
