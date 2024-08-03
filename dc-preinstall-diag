@@ -30,12 +30,31 @@ $PROG - утилита для проверки конфигурации сист
 Формат вызова: $PROG [options] [<diagnostic-task>]
 
 Опции:
--l, --list<----><------>Список диагностических задач
--V, --version<-><------>Вывод версии утилиты
--v, --verbose<-><------>Подробный вывод
--h, --help<----><------>Показать данную справку и выйти
--w, --logfile[=FILE]<-->Вывести подробный вывод в файл
--f, --force<---><------>Принудительная запись вывода в существующий файл
+-l, --list		Список диагностических задач
+-V, --version		Вывод версии утилиты
+-v, --verbose		Подробный вывод
+-h, --help		Показать данную справку и выйти
+-w, --logfile[=FILE]	Вывести подробный вывод в файл
+-f, --force		Принудительная запись вывода в существующий файл
 EOF
     exit
 }
+
+TEMP=$(getopt -n "$PROG" -o "l,V,v,h,w::,f" -l "list,version,verbose,help,logfile::,force" -- "$@") || show_usage
+eval set -- "$TEMP"
+
+while :; do
+    case "$1" in
+	-l|--list) listcmd=1 ;;
+	-V|--version) print_version "$PROG" ;;
+	-v|--verbose) verbose=1 ;;
+	-h|--help) show_usage ;;
+	-w|--logfile) shift; test -n "$1" && logfile="$1" || logfile="dc-preinstall-diag.log" ;;
+	-f|--force) force=1 ;;
+	--) shift; break ;;
+	*) fatal "Unrecognized option: $1" ;;
+    esac
+    shift
+done
+
+customcmd="$*"
