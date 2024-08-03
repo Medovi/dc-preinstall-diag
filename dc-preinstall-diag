@@ -233,3 +233,10 @@ if test -z $listcmd; then
     init_log
     print_head
 fi
+
+
+
+test -f "$logfile" && test -w "$logfile" && sed -i 's/\x1b\[[0-9;]*[mGKH]//g' $logfile
+
+exit "$global_retval"
+
