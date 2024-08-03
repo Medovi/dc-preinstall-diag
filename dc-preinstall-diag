@@ -97,3 +97,20 @@ __footer(){
 __delimiter(){
     echo "-------------------------------------------------------------------------------"
 }
+
+__check_title(){
+    color_message "$1" bold white
+}
+
+__newline(){
+    echo
+}
+
+__short_msg(){
+    case "$1" in
+        0) msg_done  "$2" ;;
+        2) msg_warn  "$2" ;;
+        102) msg_non_root  "$2" ;;
+        *) msg_fail "$2" ;;
+    esac
+}
