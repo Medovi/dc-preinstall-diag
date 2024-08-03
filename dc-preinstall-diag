@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -euo pipefail
+
+. shell-terminfo
+. shell-getopt
+
+terminfo_init
+
+PROG="dc-preinstall-diag"
+VERSION=0.2.8
+verbose=
+listcmd=
+runcmd=run
+logfile=/dev/null
+force=
+global_retval=0
