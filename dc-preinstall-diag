@@ -58,3 +58,21 @@ while :; do
 done
 
 customcmd="$*"
+
+msg_fail(){
+    echo -n "$*: ["
+    color_text "FAIL" red
+    echo "]"
+}
+
+msg_warn(){
+    echo -n "$*: ["
+    color_text "WARN" yellow
+    echo "]"
+}
+
+msg_done(){
+    echo -n "$*: ["
+    color_text "DONE" green
+    echo "]"
+}
