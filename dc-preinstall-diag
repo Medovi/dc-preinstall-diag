@@ -207,3 +207,29 @@ custom_run(){
 	run "$1" "$2" && global_retval=0 || global_retval=$?
     fi
 }
+
+init_log(){
+    local log_index
+
+    if test -e "$logfile" && test "$logfile" != "/dev/null" && test -z "$force"; then
+	log_index="$(find . -maxdepth 1 -name "$logfile.*" 2>/dev/null | sort -V | tail -1 | sed -E 's/^.*\.([^.]*)$/\1/' || true)"
+	logfile="$logfile".$(($log_index + 1))
+    fi
+    if test "$logfile" != "/dev/null"; then
+	echo -n > "$logfile"
+    fi
+}
+
+if ! test -z $listcmd; then
+    runcmd=list_run
+elif ! test -z "$customcmd"; then
+    runcmd=custom_run
+    global_retval=127
+else
+    runcmd=default_run
+fi
+
+if test -z $listcmd; then
+    init_log
+    print_head
+fi
