@@ -186,7 +186,73 @@ run(){
     return $retval
 }
 
+# Проверка наличия пакета task-samba-dc
+check_task_samba_dc(){
+    local retval=0
+    local packet_name="task-samba-dc"
+    local policy_output="$(apt-cache policy "$packet_name" 2> /dev/null)"
+    local installed_version="$(echo "$policy_output" | grep "Установлен:" | awk '{print $2}')"
 
+    if [ -z "$installed_version" ]; then
+	echo -e "Пакет "$packet_name" не установлен в системе.\n"
+	retval=2
+    else
+	echo -e "Пакет "$packet_name" установлен в системе. Версия пакета: "$installed_version".\n"
+    fi
+
+    return $retval
+}
+
+check_active_services(){
+    local retval=0
+    local retvals=()
+
+    local service1="smb.service"
+    local service2="nmb.service"
+    local service3="krb5kdc"
+    local service4="slapd"
+
+    _command systemctl status "$service1" 2> /dev/null | head -n 1
+    echo "$(systemctl status "$service1" 2> /dev/null)" | grep "Active: active (running)" && retvals[0]=0 ||
+    { echo "$(systemctl status "$service1" 2> /dev/null)" | grep "Active: inactive (dead)" && retvals[0]=2; } ||
+    { echo "$(systemctl status "$service1" 2> /dev/null)" | grep "Active: failed" && retvals[0]=1; } ||
+    { echo "Ошибка: возможно служба отсутствует." && retvals[0]=1; }
+    echo
+
+    _command systemctl status "$service2" 2> /dev/null | head -n 1
+    echo "$(systemctl status "$service2" 2> /dev/null)" | grep "Active: active (running)" && retvals[1]=0 ||
+    { echo "$(systemctl status "$service2" 2> /dev/null)" | grep "Active: inactive (dead)" && retvals[1]=2; } ||
+    { echo "$(systemctl status "$service2" 2> /dev/null)" | grep "Active: failed" && retvals[1]=1; } ||
+    { echo "Ошибка: возможно служба отсутствует." && retvals[1]=1; }
+    echo
+
+    _command systemctl status "$service3" 2> /dev/null | head -n 1
+    echo "$(systemctl status "$service3" 2> /dev/null)" | grep "Active: active (running)" && retvals[2]=0 ||
+    { echo "$(systemctl status "$service3" 2> /dev/null)" | grep "Active: inactive (dead)" && retvals[2]=2; } ||
+    { echo "$(systemctl status "$service3" 2> /dev/null)" | grep "Active: failed" && retvals[2]=1; } ||
+    { echo "Ошибка: возможно служба отсутствует." && retvals[2]=1; }
+    echo
+
+    _command systemctl status "$service4" 2> /dev/null | head -n 1
+    echo "$(systemctl status "$service4" 2> /dev/null)" | grep "Active: active (running)" && retvals[3]=0 ||
+    { echo "$(systemctl status "$service4" 2> /dev/null)" | grep "Active: inactive (dead)" && retvals[3]=2; } ||
+    { echo "$(systemctl status "$service4" 2> /dev/null)" | grep "Active: failed" && retvals[3]=1; } ||
+    { echo "Ошибка: возможно служба отсутствует." && retvals[3]=1; }
+    echo
+
+    for val in "${retvals[@]}"; do
+	if [[ $val -eq 1 ]]; then
+	    retval=1
+	    break
+	elif [[ $val -eq 2 ]] && [[ $retval -ne 1 ]]; then
+	    retval=2
+	elif [[ $val -eq 0 ]] && [[ $retval -ne 1 ]] && [[ $retval -ne 2 ]]; then
+	    retval=0
+	fi
+	done
+
+    return $retval
+}
 
 default_run(){
     local retval=0
@@ -234,9 +300,9 @@ if test -z $listcmd; then
     print_head
 fi
 
-
+$runcmd check_task_samba_dc "Checking the availability of the "task-samba-dc" package"
+$runcmd check_active_services "Checking running services: smb, nmb, krb5kdc, slapd"
 
 test -f "$logfile" && test -w "$logfile" && sed -i 's/\x1b\[[0-9;]*[mGKH]//g' $logfile
 
 exit "$global_retval"
-
