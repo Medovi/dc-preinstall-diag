@@ -114,3 +114,11 @@ __short_msg(){
         *) msg_fail "$2" ;;
     esac
 }
+
+__log(){
+    test -z $verbose && tee -a "$logfile" 1>/dev/null 2>&1 || tee -a "$logfile"
+}
+
+__log_force_print(){
+    tee -a "$logfile"
+}
