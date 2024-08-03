@@ -136,3 +136,29 @@ print_head(){
     __footer | __log
     __newline | __log
 }
+
+_command(){
+    local retval=0
+    local x=
+    local q=
+    local r=
+    if test "$1" = '-q'; then
+        shift
+        q=1
+    fi
+    if test "$1" = '-r'; then
+        shift
+        r=1
+    fi
+    if test "$1" = '-x'; then
+        shift
+        x=1
+    fi
+    test -z "$q" && test -z "$r" && __command_msg "$*"
+    test -z "$q" && test -n "$r" && __command_msg -r "$*"
+    test -z "$x" || echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    eval "$*" || retval=$?
+    test -z "$x" || echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo
+    return $retval
+}
