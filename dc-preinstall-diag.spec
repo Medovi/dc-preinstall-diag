@@ -25,13 +25,14 @@ mkdir -p %buildroot%_alterator_datadir/diagnostictools/%name
 install -p -D -m755 %name %buildroot%_bindir/%name
 install -p -D -m644 %name.backend %buildroot%_alterator_datadir/backends/%name.backend
 install -p -D -m644 %name.diagnostictool %buildroot%_alterator_datadir/diagnostictools/%name/%name.diagnostictool
+install -p -D %name.svg %buildroot%_iconsdir/hicolor/scalable/apps/%name.svg
 
 %files
 %_bindir/%name
 %_alterator_datadir/backends/%name.backend
 %_alterator_datadir/diagnostictools/%name/%name.diagnostictool
+%_iconsdir/hicolor/scalable/apps/%name.svg
 
 %changelog
-* Sun Aug 08 2024 Sergey Savelev <savelevsa@basealt.ru> 0.0.1-alt1
+* Thu Aug 08 2024 Sergey Savelev <savelevsa@basealt.ru> 0.0.1-alt1
 - initial build
-

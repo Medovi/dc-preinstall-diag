@@ -1,12 +1,12 @@
 [Alterator Entry]
 Name = dc-preinstall-diag
 Type = Diagnostictool
-DisplayName = Утилита для проверки состояния системы перед установкой контроллера домена
-DisplayName[ru_RU] = A utility to check the system status before installing a domain controller
-DisplayName[en_EN] = Утилита для проверки состояния системы перед установкой контроллера домена
-Comment = Утилита для проверки состояния системы перед установкой контроллера домена
-Comment[ru_RU] = A utility to check the system status before installing a domain controller
-Comment[en_EN] = Утилита для проверки состояния системы перед установкой контроллера домена
+DisplayName = A utility to check the system status before installing a domain controller
+DisplayName[ru_RU] = Утилита для проверки состояния системы перед установкой контроллера домена
+DisplayName[en_EN] = A utility to check the system status before installing a domain controller
+Comment = A utility to check the system status before installing a domain controller
+Comment[ru_RU] = Утилита для проверки состояния системы перед установкой контроллера домена
+Comment[en_EN] = A utility to check the system status before installing a domain controller
 Icon = system-run
 ReportSuffix = txt
 
