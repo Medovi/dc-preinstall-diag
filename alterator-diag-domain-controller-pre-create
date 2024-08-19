@@ -28,7 +28,7 @@ EOF
 # A function for displaying background information
 show_usage(){
     cat <<EOF
-$PROG_NAME - инструмент диагностики состояния контроллера домена
+$PROG_NAME - инструмент диагностики состояния системы перед установкой первого контроллера домена
 
 Формат вызова: $PROG_NAME [options] [<diagnostic-task>]
 
@@ -69,3 +69,44 @@ while true; do
 	    ;;
     esac
 done
+
+# A function for displaying a list of tests
+task_show(){
+    local func="$1"
+    echo "$func"
+}
+
+# Function for running tests
+task_run(){
+    local retval=126
+    local func="$1"
+
+    if test -n "$task_list"; then
+	echo "$task_list" | tr ' ' '\n' | grep -q "^$func\$" || return 0
+    fi
+
+    $func && retval=0 || retval="$?"
+    test $retval=0
+
+    return $retval
+}
+
+# Depending on the parameter of the cmd variable, the function decides what to run
+task(){
+    local task="$1"
+
+    case "$cmd" in
+	list)
+	    task_show "$task"
+	    ;;
+	report)
+	    ;;
+# Here, add a condition for the error code (output [WARN] when the error code of the test = 2)
+	run)
+	    task_run "$task" && echo "[DONE]: $task" || echo "[FAIL]: $task"
+	    ;;
+	*)
+	    fatal "Unrecognized command: $cmd"
+	    ;;
+    esac
+}
