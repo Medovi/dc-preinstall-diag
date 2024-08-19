@@ -200,8 +200,26 @@ check_local_in_domain_name(){
     return $retval
 }
 
+check_status_network_manager(){
+    # Here is an important point: settings that are not related to the Network Manager can be used, then the test will not be relevant
+    local retval=0
+    local service="NetworkManager.service"
+    local output="$(systemctl status "$service" 2> /dev/null)"
+
+    if [[ "$output" == *"Active: active (running)"* ]]; then
+	    retval=0
+	elif [[ "$output" == *"Active: inactive (dead)"* ]]; then
+	    retval=2
+	else
+	    retval=1
+    fi
+
+    return $retval
+}
+
 task check_task_samba_dc
 task check_active_services
 task check_samba_config
 task check_hostname
 task check_local_in_domain_name
+task check_status_network_manager
