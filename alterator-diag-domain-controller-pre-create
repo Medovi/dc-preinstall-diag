@@ -1,0 +1,18 @@
+#!/bin/bash
+# Copyright (C) 2024 Evgeny Sinelnikov <sin@altlinux.org>
+# Copyright (C) 2024 Sergey Savelev <savelevsa@basealt.ru>
+#
+# A system health diagnostic tool before installing the first domain controller
+#
+# This program is free software: you can redistribute it and/or modify
+#
+# SPDX-License-Identifier: GNU GPL v3.0
+
+set -euo pipefail
+
+. shell-getopt
+
+readonly PROG_NAME="${0##*/}"
+readonly VERSION="0.0.1"
+readonly task_list="$*"
+cmd="run"
