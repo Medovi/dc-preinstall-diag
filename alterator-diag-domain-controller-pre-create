@@ -110,3 +110,21 @@ task(){
 	    ;;
     esac
 }
+
+# Checking the availability of the task-samba-dc package
+check_task_samba_dc(){
+    local retval=0
+    local packet_name="task-samba-dc"
+    local policy_output="$(rpm -qi "$packet_name" 2> /dev/null)"
+    local version="$(echo "$policy_output" | grep "Version" | awk '{print $NF}')"
+    local release="$(echo "$policy_output" | grep "Release" | awk '{print $NF}')"
+    local tag="$(echo "$policy_output" | grep "DistTag" | awk '{print $NF}')"
+
+    if [ -z "$version" ] && [ -z "$release" ] && [ -z "$tag" ]; then
+	retval=1
+    fi
+
+    return $retval
+}
+
+task check_task_samba_dc
