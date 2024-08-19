@@ -16,3 +16,27 @@ readonly PROG_NAME="${0##*/}"
 readonly VERSION="0.0.1"
 readonly task_list="$*"
 cmd="run"
+
+# Function for displaying the program version
+print_version(){
+    cat <<EOF
+Версия программы $PROG_NAME - $VERSION
+EOF
+    exit 0
+}
+
+# A function for displaying background information
+show_usage(){
+    cat <<EOF
+$PROG_NAME - инструмент диагностики состояния контроллера домена
+
+Формат вызова: $PROG_NAME [options] [<diagnostic-task>]
+
+Опции:
+    -l, --list<><------><------>Список диагностических задач
+    -v, --version<-----><------>Вывод версии утилиты
+    -h, --help<><------><------>Показать данную справку и выйти
+EOF
+    exit 0
+}
+
