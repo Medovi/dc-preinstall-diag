@@ -189,7 +189,19 @@ check_hostname(){
     return $retval
 }
 
+# Checking the content of the .local suffix in the domain name of the host
+check_local_in_domain_name(){
+    local retval=0
+    local host="$(hostname -f)"
+    local suffix=".local"
+
+    [[ "$host" != *"$suffix"* ]] || retval=2
+
+    return $retval
+}
+
 task check_task_samba_dc
 task check_active_services
 task check_samba_config
 task check_hostname
+task check_local_in_domain_name
