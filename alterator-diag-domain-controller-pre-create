@@ -217,9 +217,25 @@ check_status_network_manager(){
     return $retval
 }
 
+# A function that checks for the presence of the string nameserver 127.0.0.1 in the configuration file
+check_nameserver(){
+    local retval=0
+    local ip_addr="$(hostname -i)"
+    local nameservers="$(grep "nameserver " /etc/resolv.conf | awk '{print $2}')"
+
+    if echo "$nameservers" | grep -q "^$ip_addr$" || echo "$nameservers" | grep -q "127.0.0.1"; then
+	retval=0
+    else
+	retval=2
+    fi
+
+    return $retval
+}
+
 task check_task_samba_dc
 task check_active_services
 task check_samba_config
 task check_hostname
 task check_local_in_domain_name
 task check_status_network_manager
+task check_nameserver
