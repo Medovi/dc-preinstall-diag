@@ -127,4 +127,43 @@ check_task_samba_dc(){
     return $retval
 }
 
+# A function that checks the activity of the "smb", "nmb", "krb5kdc" and "slapd" services
+check_active_services(){
+    local retval=0
+    local retvals=()
+    local outputs=()
+    local services=()
+
+    services[0]="smb.service"
+    services[1]="nmb.service"
+    services[2]="krb5kdc.service"
+    services[3]="slapd.service"
+
+    for (( i=0; i < ${#services[@]}; i++ )); do
+	outputs[$i]="$(systemctl status "${services[$i]}" 2> /dev/null)"
+	
+	if [[ "${outputs[$i]}" == *"Active: active (running)"* ]]; then
+	    retvals[$i]=0
+	elif [[ "{$outputs[$i]}" == *"Active: inactive (dead)"* ]]; then
+	    retvals[$i]=2
+	else
+	    retvals[$i]=1
+	fi
+    done
+
+    for val in "${retvals[@]}"; do
+	if [[ $val -eq 1 ]]; then
+	    retval=1
+	    break
+	elif [[ $val -eq 2 ]] && [[ $retval -ne 1 ]]; then
+	    retval=2
+	elif [[ $val -eq 0 ]] && [[ $retval -ne 1 ]] && [[ $retval -ne 2 ]]; then
+	    retval=0
+	fi
+    done
+
+    return $retval
+}
+
 task check_task_samba_dc
+task check_active_services
