@@ -179,6 +179,17 @@ check_samba_config(){
     return $retval
 }
 
+# Checking the full domain name of the host (FQDN)
+check_hostname(){
+    local retval=0
+    local host="$(hostname -f)"
+
+    { [[ "$host" == *.* ]] && [[ "$host" != $.* ]] && [[ "$(host "$host")" ]]; } || retval=2
+
+    return $retval
+}
+
 task check_task_samba_dc
 task check_active_services
 task check_samba_config
+task check_hostname
