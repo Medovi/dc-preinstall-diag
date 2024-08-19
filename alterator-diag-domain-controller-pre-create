@@ -165,5 +165,20 @@ check_active_services(){
     return $retval
 }
 
+# Checking the existence of the smb.conf file
+check_samba_config(){
+    local retval=0
+    local file_config="/etc/samba/smb.conf"
+
+    if [[ -s "$file_config" ]]; then
+	retval=0
+    else
+	retval=2
+    fi
+
+    return $retval
+}
+
 task check_task_samba_dc
 task check_active_services
+task check_samba_config
