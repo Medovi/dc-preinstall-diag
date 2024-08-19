@@ -1,0 +1,67 @@
+[Alterator Entry]
+Name = alterator-diag-domain-controller-pre-create
+Type = Diagnostictool
+DisplayName = A utility to check the system status before installing a domain controller
+DisplayName[ru_RU] = Утилита для проверки состояния системы перед установкой контроллера домена
+DisplayName[en_EN] = A utility to check the system status before installing a domain controller
+Comment = A utility to check the system status before installing a domain controller
+Comment[ru_RU] = Утилита для проверки состояния системы перед установкой контроллера домена
+Comment[en_EN] = A utility to check the system status before installing a domain controller
+Icon = alterator-diag-domain-controller-pre-create.svg
+ReportSuffix = txt
+
+[check_task_samba_dc]
+DisplayName = Checking the availability of the task-samba-dc package
+DisplayName[ru_RU] = Проверка наличия пакета task-samba-dc
+DisplayName[en_EN] = Checking the availability of the task-samba-dc package
+Comment = Checking the availability of the task-samba-dc package
+Comment[ru_RU] = Проверка наличия пакета task-samba-dc
+Comment[en_EN] = Checking the availability of the task-samba-dc package
+
+[check_active_services]
+DisplayName = Checking running services: smb, nmb, krb5kdc, slapd
+DisplayName[ru_RU] = Проверка запущенных служб: smb, nmb, krb5kdc, slapd
+DisplayName[en_EN] = Checking running services: smb, nmb, krb5kdc, slapd
+Comment = Checking running services: smb, nmb, krb5kdc, slapd
+Comment[ru_RU] = Проверка запущенных служб: smb, nmb, krb5kdc, slapd
+Comment[en_EN] = Checking running services: smb, nmb, krb5kdc, slapd
+
+[check_samba_config]
+DisplayName = Checking for the presence of the /etc/samba/smb.conf file
+DisplayName[ru_RU] = Проверка наличия файла /etc/samba/smb.conf
+DisplayName[en_EN] = Checking for the presence of the /etc/samba/smb.conf file
+Comment = Checking for the presence of the /etc/samba/smb.conf file
+Comment[ru_RU] = Проверка наличия файла /etc/samba/smb.conf
+Comment[en_EN] = Checking for the presence of the /etc/samba/smb.conf file
+
+[check_hostname]
+DisplayName = Checking the hostname - FQDN
+DisplayName[ru_RU] = Проверка имени хоста - FQDN
+DisplayName[en_EN] = Checking the hostname - FQDN
+Comment = Checking the hostname - FQDN
+Comment[ru_RU] = Проверка имени хоста - FQDN
+Comment[en_EN] = Checking the hostname - FQDN
+
+[check_local_in_domain_name]
+DisplayName = Warning if there is a suffix ".local" in the name
+DisplayName[ru_RU] = Предупреждение при наличии суффикса .local в имени
+DisplayName[en_EN] = Warning if there is a suffix ".local" in the name
+Comment = Warning if there is a suffix ".local" in the name
+Comment[ru_RU] = Предупреждение при наличии суффикса .local в имени
+Comment[en_EN] = Warning if there is a suffix ".local" in the name
+
+[check_status_network_manager]
+DisplayName = Information about the active Network interface manager
+DisplayName[ru_RU] = Информация об активном менеджере сетевых интерфейсов
+DisplayName[en_EN] = Information about the active Network interface manager
+Comment = Information about the active Network interface manager
+Comment[ru_RU] = Информация об активном менеджере сетевых интерфейсов
+Comment[en_EN] = Information about the active Network interface manager
+
+[check_nameserver]
+DisplayName = Checking for nameserver 127.0.0.1
+DisplayName[ru_RU] = Проверка наличия nameserver 127.0.0.1
+DisplayName[en_EN] = Checking for nameserver 127.0.0.1
+Comment = Checking for nameserver 127.0.0.1 or nameserver <address_of_the_current_network_interface>
+Comment[ru_RU] = Проверка наличия nameserver 127.0.0.1 или nameserver <адрес_текущего_сетевого_интерфейса>
+Comment[en_EN] = Checking for nameserver 127.0.0.1 or nameserver <address_of_the_current_network_interface>
